@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ResNet Training</title>
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </head>
 <body>
     <h1>ResNet Training</h1>
@@ -13,12 +12,21 @@
     <pre id="result"></pre>
 
     <script type="text/javascript">
-        $(document).ready(function() {
-            $('#trainButton').click(function() {
-                $.post('/train', function(data) {
-                    $('#result').text(data.details || data.status);
-                });
-            });
+        document.getElementById('trainButton').addEventListener('click', function() {
+            // Create a new XMLHttpRequest
+            var xhr = new XMLHttpRequest();
+            xhr.open('POST', '/train', true);
+
+            // Set up the response handler
+            xhr.onreadystatechange = function() {
+                if (xhr.readyState === XMLHttpRequest.LOADING) {
+                    // Append new data to the result element
+                    document.getElementById('result').innerHTML += xhr.responseText;
+                }
+            };
+
+            // Send the request
+            xhr.send();
         });
     </script>
 </body>

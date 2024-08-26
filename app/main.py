@@ -1,5 +1,6 @@
-from flask import Flask, render_template, request, jsonify
+from flask import Flask, render_template, request, jsonify, Response
 from app.model import train_resnet
+import time
 
 app = Flask(__name__)
 
@@ -10,8 +11,13 @@ def index():
 @app.route('/train', methods=['POST'])
 def train():
     # Call the ResNet training function
-    result = train_resnet()
-    return jsonify({'status': 'Training started', 'details': result})
+    def generate():
+        for log in train_resnet():
+            yield log + '<br>'
+            # Optional: simulate some delay
+            time.sleep(1)
+    
+    return Response(generate(), content_type='text/html')
 
 if __name__ == "__main__":
     app.run(host='0.0.0.0')
